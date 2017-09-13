@@ -1,5 +1,5 @@
 
-import java.util.Properties;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,32 +15,40 @@ import java.util.logging.Logger;
  */
 public class Job implements Runnable {
     
-    Main ejecutar;
+    Correo correo;
+    
+    String mensaje;
+    
+    long inicio, fin, tiempo; //Variables para determinar el tiempo de ejecución
     
     int indicadorFinal;
     int indicadorActual;
     
-    public Job (int indicadorInicial, int indicadorFinal) {
-    
+    public Job (int indicadorInicial, int indicadorFinal, Correo correo) throws IOException {
+        
         this.indicadorActual = indicadorInicial;
         this.indicadorFinal = indicadorFinal;
+        this.correo = correo;
     
     }
     
-    long inicio, fin, tiempo; //Variables para determinar el tiempo de ejecución
-    
-    //se crea una instancia a la clase
-    Properties propiedades = new Propiedades().getProperties();
- 
     @Override
     public void run() {
-       
+        
         inicio = System.currentTimeMillis(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
         
             indicadorActual++;
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
+            //Este IF es solo para probar si envía correo
+            if ( indicadorActual == 1 ) {
+            
+                mensaje = "Inicio de Job";
+            
+                correo.sendMail(mensaje);
        
+            }
+            
             try {
                     
                 Thread.sleep(500);
@@ -105,8 +113,6 @@ public class Job implements Runnable {
                 fin = System.currentTimeMillis(); //Tomamos la hora en que finalizó el algoritmo y la almacenamos en la variable T
                 tiempo = (fin - inicio) * indicadorFinal; //Calculamos los milisegundos de diferencia
                 System.out.println("Tiempo de ejecución en milisegundos: " + tiempo); //Mostramos en pantalla el tiempo de ejecución en milisegundos   
-                
-                ejecutar.Detener();
                 
             }  
         

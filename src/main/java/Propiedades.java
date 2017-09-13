@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -19,20 +20,20 @@ public class Propiedades {
     
     Properties propiedades = new Properties();
        
-    File externo = new File(Main.urlArgumentos);
-    
-    public Properties getProperties() {
-        
+    public Propiedades(String urlArgumentos) throws FileNotFoundException, IOException {
+      
+        File externo = new File(urlArgumentos);
+
         try {
         
             if (externo.exists()&& externo.canRead()) {                
                 
                 try(FileInputStream raiz = new FileInputStream(externo)) {
                     
-                    propiedades.load(raiz);
+                propiedades.load(raiz);
                     
-                } 
-            
+            } 
+                 
             } else {
                 
                 try (InputStream raiz = getClass().getResourceAsStream("ArchivoConfig.properties")) {
@@ -42,23 +43,18 @@ public class Propiedades {
                 }
          
             }
-        
-            if (!propiedades.isEmpty()) {                
-            
-                return propiedades;
-            
-            } else {//sino  retornara NULL
-        
-                return null;
-            
-            }
-        
         } catch (IOException ex) {
                 
-            return null;
+            System.out.println("Envíar a log");
         
         }
         
+    }
+    
+    public Properties getProperties() {
+        
+        return propiedades;
+    
     }
     
 }

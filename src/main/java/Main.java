@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,16 +29,18 @@ public class Main {
         private static Job job02; 
         private static Job job03; 
         private static Job job04;
+      
+        private static int numIndicadores;
         
         public static String urlArgumentos;
         
-        private static int numIndicadores;
-        
         private static Properties propiedades;
+        
+        private static Correo correo;
         
         private static ScheduledExecutorService ejecutar;
         
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
         if ( args.length != 0 ) {
           
@@ -49,16 +52,18 @@ public class Main {
             
         }
         
-        propiedades = new Propiedades().getProperties();
+        propiedades = new Propiedades(urlArgumentos).getProperties();
+        
+        correo = new Correo(propiedades);
         
         int hora = Integer.parseInt(propiedades.getProperty("horaInicio"));
         int minuto = Integer.parseInt(propiedades.getProperty("minutoInicio"));
         numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
         
-        job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4);
-        job02 = new Job(numIndicadores/4, (numIndicadores/4)*2);
-        job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3);
-        job04 = new Job((numIndicadores/4)*3, numIndicadores);
+        job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
+        job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
+        job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
+        job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
                 
         LocalDateTime localNow = LocalDateTime.now();
         ZoneId currentZone = ZoneId.of("America/Mexico_City");
@@ -73,16 +78,10 @@ public class Main {
 
         ejecutar = Executors.newScheduledThreadPool(4);            
         ejecutar.scheduleAtFixedRate(job01, initalDelay, 1, TimeUnit.SECONDS);
-        ejecutar.scheduleAtFixedRate(job02, initalDelay, 1, TimeUnit.SECONDS);
-        ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
-        ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
+        //ejecutar.scheduleAtFixedRate(job02, initalDelay, 1, TimeUnit.SECONDS);
+        //ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
+        //ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
         
     }
-    
-    public void Detener() {
-        
-        ejecutar.shutdown();
-        
-    }
-    
+  
 }
