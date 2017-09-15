@@ -6,6 +6,7 @@
 
 import java.io.IOException;
 import java.util.Properties;
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -22,12 +23,13 @@ public class Correo {
     
     private static Properties propiedades;
     
-    public static String usuario;
-    public static String password;
-    String para;
-    String asunto;
-    String host;
-    String puerto;
+    private String usuario;
+    private String password;
+    private String para;
+    private String asunto;
+    private String host;
+    private String puerto;
+    private String[] destinatarios;
    
     public Correo(Properties propiedades) throws IOException {
         
@@ -38,6 +40,7 @@ public class Correo {
         this.asunto = propiedades.getProperty("asunto");
         this.host = propiedades.getProperty("host");
         this.puerto = propiedades.getProperty("puerto");
+        this.destinatarios = para.split(";");
     
     }
     
@@ -64,7 +67,11 @@ public class Correo {
  
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(usuario));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(para));
+            Address []destinos = new Address[destinatarios.length];//Aqui usamos el arreglo de destinatarios
+            for( int i=0;i<destinos.length;i++ ) { 
+                destinos[i]=new InternetAddress(destinatarios[i]); 
+            } 
+            message.setRecipients(Message.RecipientType.TO, destinos);
             message.setSubject(asunto);
             message.setText(mensaje);
  

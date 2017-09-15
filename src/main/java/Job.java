@@ -15,9 +15,13 @@ import java.util.logging.Logger;
  */
 public class Job implements Runnable {
     
-    Correo correo;
+    private Correo correo;
     
-    String mensaje;
+    private Conexion conexion;
+    
+    private Agora agora;
+    
+    private String mensaje;
     
     long inicio, fin, tiempo; //Variables para determinar el tiempo de ejecución
     
@@ -29,6 +33,8 @@ public class Job implements Runnable {
         this.indicadorActual = indicadorInicial;
         this.indicadorFinal = indicadorFinal;
         this.correo = correo;
+        this.conexion = new Conexion();
+        this.agora = new Agora(conexion);
     
     }
     
@@ -41,13 +47,13 @@ public class Job implements Runnable {
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
             //Este IF es solo para probar si envía correo
-            if ( indicadorActual == 1 ) {
+            /*if ( indicadorActual == 1 ) {
             
                 mensaje = "Inicio de Job";
             
                 correo.sendMail(mensaje);
        
-            }
+            }*/
             
             try {
                     
@@ -59,7 +65,7 @@ public class Job implements Runnable {
                
             }
 
-            System.out.println("Consultar por código del indicador en Agora ");
+            System.out.println("Consultar por código del indicador en Agora " + agora.consultarAgora(indicadorActual));
 
             try {
                     
@@ -112,8 +118,8 @@ public class Job implements Runnable {
                 
                 fin = System.currentTimeMillis(); //Tomamos la hora en que finalizó el algoritmo y la almacenamos en la variable T
                 tiempo = (fin - inicio) * indicadorFinal; //Calculamos los milisegundos de diferencia
-                System.out.println("Tiempo de ejecución en milisegundos: " + tiempo); //Mostramos en pantalla el tiempo de ejecución en milisegundos   
-                
+                System.out.println("Tiempo de ejecución en milisegundos: " + tiempo); //Mostramos en pantalla el tiempo de ejecución en milisegundos  
+             
             }  
         
     }

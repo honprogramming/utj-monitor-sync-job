@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class Propiedades {
     
-    Properties propiedades = new Properties();
+    private Properties propiedades = new Properties();
        
     public Propiedades(String urlArgumentos) throws FileNotFoundException, IOException {
       

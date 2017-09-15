@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -32,7 +34,7 @@ public class Main {
       
         private static int numIndicadores;
         
-        public static String urlArgumentos;
+        private static String urlArgumentos;
         
         private static Properties propiedades;
         
@@ -40,7 +42,10 @@ public class Main {
         
         private static ScheduledExecutorService ejecutar;
         
-    public static void main(String[] args) throws IOException {
+        private static String[] horas;
+        private static String[] minutos;
+        
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         
         if ( args.length != 0 ) {
           
@@ -56,32 +61,50 @@ public class Main {
         
         correo = new Correo(propiedades);
         
-        int hora = Integer.parseInt(propiedades.getProperty("horaInicio"));
-        int minuto = Integer.parseInt(propiedades.getProperty("minutoInicio"));
-        numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
+        String horaInicio = propiedades.getProperty("horaInicio");
+        String minutoInicio = propiedades.getProperty("minutoInicio");
         
-        job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
-        job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
-        job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
-        job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
-                
-        LocalDateTime localNow = LocalDateTime.now();
-        ZoneId currentZone = ZoneId.of("America/Mexico_City");
-        ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
-        ZonedDateTime zonedNext5 ;
-        zonedNext5 = zonedNow.withHour(hora).withMinute(minuto).withSecond(0);
-        if(zonedNow.compareTo(zonedNext5) > 0)
-            zonedNext5 = zonedNext5.plusDays(1);
-
-        Duration duration = Duration.between(zonedNow, zonedNext5);
-        long initalDelay = duration.getSeconds();
-
-        ejecutar = Executors.newScheduledThreadPool(4);            
-        ejecutar.scheduleAtFixedRate(job01, initalDelay, 1, TimeUnit.SECONDS);
-        //ejecutar.scheduleAtFixedRate(job02, initalDelay, 1, TimeUnit.SECONDS);
-        //ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
-        //ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
+        horas = horaInicio.split(";");
+        minutos = minutoInicio.split(";");
+             
+        for (int i = 0; i < horas.length; i++) {
         
+            numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
+        
+            job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
+            job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
+            job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
+            job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
+        
+            int hora = Integer.parseInt(horas[i]);
+            int minuto = Integer.parseInt(minutos[i]);
+            
+            LocalDateTime localNow = LocalDateTime.now();
+            ZoneId currentZone = ZoneId.of("America/Mexico_City");
+            ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
+            ZonedDateTime zonedNext5 ;
+            zonedNext5 = zonedNow.withHour(hora).withMinute(minuto).withSecond(0);
+            if(zonedNow.compareTo(zonedNext5) > 0)
+                zonedNext5 = zonedNext5.plusDays(1);
+
+            Duration duration = Duration.between(zonedNow, zonedNext5);
+            long initalDelay = duration.getSeconds();
+
+            ejecutar = Executors.newScheduledThreadPool(4);            
+            ScheduledFuture future1 = ejecutar.scheduleAtFixedRate(job01, initalDelay, 1, TimeUnit.SECONDS);
+            ScheduledFuture future2 = ejecutar.scheduleAtFixedRate(job02, initalDelay, 1, TimeUnit.SECONDS);
+            ScheduledFuture future3 = ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
+            ScheduledFuture future4 = ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
+            
+            if (i == horas.length) {
+       
+                i = 0;
+            
+            }
+        
+        }
+       
     }
-  
+      
 }
+
