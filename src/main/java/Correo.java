@@ -21,7 +21,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class Correo {
     
-    private static Properties propiedades;
+    private Properties propiedades;
     
     private String usuario;
     private String password;
