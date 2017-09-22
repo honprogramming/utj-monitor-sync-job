@@ -68,5 +68,11 @@
             <artifactId>sqljdbc4-chs</artifactId>
             <version>4.0.2206.100</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.8</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

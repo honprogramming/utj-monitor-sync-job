@@ -42,8 +42,7 @@ public class Main {
         
         private static ScheduledExecutorService ejecutar;
         
-        private static String[] horas;
-        private static String[] minutos;
+        private static String[] horasInicioJob;
         
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         
@@ -61,13 +60,11 @@ public class Main {
         
         correo = new Correo(propiedades);
         
-        String horaInicio = propiedades.getProperty("horaInicio");
-        String minutoInicio = propiedades.getProperty("minutoInicio");
+        String horasInicio = propiedades.getProperty("horasInicioJob");
         
-        horas = horaInicio.split(";");
-        minutos = minutoInicio.split(";");
+        horasInicioJob = horasInicio.split(";");
              
-        for (int i = 0; i < horas.length; i++) {
+        for (int i = 0; i < horasInicioJob.length; i++) {
         
             numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
         
@@ -76,8 +73,8 @@ public class Main {
             job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
             job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
         
-            int hora = Integer.parseInt(horas[i]);
-            int minuto = Integer.parseInt(minutos[i]);
+            int hora = Integer.parseInt(horasInicioJob[i].substring(0, 2));
+            int minuto = Integer.parseInt(horasInicioJob[i].substring(3, 5));
             
             LocalDateTime localNow = LocalDateTime.now();
             ZoneId currentZone = ZoneId.of("America/Mexico_City");
@@ -96,7 +93,7 @@ public class Main {
             ScheduledFuture future3 = ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
             ScheduledFuture future4 = ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
             
-            if (i == horas.length) {
+            if (i == horasInicioJob.length) {
        
                 i = 0;
             

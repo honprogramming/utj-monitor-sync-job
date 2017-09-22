@@ -21,6 +21,8 @@ public class Job implements Runnable {
     
     private Agora agora;
     
+    private Cliente cliente;
+    
     private String mensaje;
     
     long inicio, fin, tiempo; //Variables para determinar el tiempo de ejecución
@@ -35,6 +37,7 @@ public class Job implements Runnable {
         this.correo = correo;
         this.conexion = new Conexion();
         this.agora = new Agora(conexion);
+        this.cliente = new Cliente();
     
     }
     
@@ -46,6 +49,7 @@ public class Job implements Runnable {
             indicadorActual++;
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
+            System.out.println(cliente.clienteGet());
             //Este IF es solo para probar si envía correo
             /*if ( indicadorActual == 1 ) {
             
