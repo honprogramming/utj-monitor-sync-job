@@ -38,7 +38,10 @@ entre cada correo.
 
 ### Ejecución del programa
 
-En la línea de comandos se debe de poner la siguiente instrucción:
+1. Abrir Simbolo de sistema o cmd.
+2. Moverse al directorio donde se encuentra guardado el archivo **.jar**
+* Ejemplo: `c:\Users\pc\documents>`
+3.En la línea de comandos se debe de poner la siguiente instrucción:
 `java -jar SyncJob.jar <ruta donde se encuentra archivo configuración>`
 
 * Ejemplo: `java -jar SyncJob.jar C:\Users\pc\Documents\archivoConf.txt`
