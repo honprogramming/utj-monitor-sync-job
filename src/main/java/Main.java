@@ -44,6 +44,8 @@ public class Main {
         
         private static String[] horasInicioJob;
         
+        private static int hora, minuto;
+        
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         
         if ( args.length != 0 ) {
@@ -65,16 +67,26 @@ public class Main {
         horasInicioJob = horasInicio.split(";");
              
         for (int i = 0; i < horasInicioJob.length; i++) {
-        
-            numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
+            //Le puse un número unicamente para probar, mientras sabemos como se obtendra el número de indicadores
+            numIndicadores = 8;
         
             job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
             job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
             job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
             job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
         
-            int hora = Integer.parseInt(horasInicioJob[i].substring(0, 2));
-            int minuto = Integer.parseInt(horasInicioJob[i].substring(3, 5));
+            if (horasInicioJob[i].length() == 5) {
+                    
+                hora = Integer.parseInt(horasInicioJob[i].substring(0, 2));
+                minuto = Integer.parseInt(horasInicioJob[i].substring(3, 5));
+                    
+            } else {
+                    
+                hora = 06;
+                minuto = 00;
+                System.out.println("Formato de hora equivocado, reportar log");
+                    
+            }
             
             LocalDateTime localNow = LocalDateTime.now();
             ZoneId currentZone = ZoneId.of("America/Mexico_City");

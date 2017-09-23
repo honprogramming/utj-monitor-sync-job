@@ -17,13 +17,13 @@ public class Cliente {
     
     private String output = null;
     
-    public String clienteGet () {
+    public String clienteGet (String url) {
     
         try {
 
             Client cliente = Client.create();
 
-            WebResource webResource = cliente.resource("https://postman-echo.com/get?test=");
+            WebResource webResource = cliente.resource(url);
 
 	    ClientResponse respuesta = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
