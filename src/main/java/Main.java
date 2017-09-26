@@ -42,8 +42,9 @@ public class Main {
         
         private static ScheduledExecutorService ejecutar;
         
-        private static String[] horas;
-        private static String[] minutos;
+        private static String[] horasInicioJob;
+        
+        private static int hora, minuto;
         
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         
@@ -61,23 +62,31 @@ public class Main {
         
         correo = new Correo(propiedades);
         
-        String horaInicio = propiedades.getProperty("horaInicio");
-        String minutoInicio = propiedades.getProperty("minutoInicio");
+        String horasInicio = propiedades.getProperty("horasInicioJob");
         
-        horas = horaInicio.split(";");
-        minutos = minutoInicio.split(";");
+        horasInicioJob = horasInicio.split(";");
              
-        for (int i = 0; i < horas.length; i++) {
-        
-            numIndicadores = Integer.parseInt(propiedades.getProperty("numIndicadores"));
+        for (int i = 0; i < horasInicioJob.length; i++) {
+            //Le puse un número unicamente para probar, mientras sabemos como se obtendra el número de indicadores
+            numIndicadores = 8;
         
             job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
             job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
             job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
             job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
         
-            int hora = Integer.parseInt(horas[i]);
-            int minuto = Integer.parseInt(minutos[i]);
+            try {
+                    
+                hora = Integer.parseInt(horasInicioJob[i].substring(0, 2));
+                minuto = Integer.parseInt(horasInicioJob[i].substring(3, 5));
+                    
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    
+                hora = 06;
+                minuto = 00;
+                System.out.println("Formato de hora equivocado, reportar log");
+                    
+            }
             
             LocalDateTime localNow = LocalDateTime.now();
             ZoneId currentZone = ZoneId.of("America/Mexico_City");
@@ -96,7 +105,7 @@ public class Main {
             ScheduledFuture future3 = ejecutar.scheduleAtFixedRate(job03, initalDelay, 1, TimeUnit.SECONDS);
             ScheduledFuture future4 = ejecutar.scheduleAtFixedRate(job04, initalDelay, 1, TimeUnit.SECONDS);
             
-            if (i == horas.length) {
+            if (i == horasInicioJob.length) {
        
                 i = 0;
             

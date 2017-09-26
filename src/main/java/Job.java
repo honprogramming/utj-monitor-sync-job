@@ -21,7 +21,10 @@ public class Job implements Runnable {
     
     private Agora agora;
     
+    private Cliente cliente;
+    
     private String mensaje;
+    private String url;
     
     long inicio, fin, tiempo; //Variables para determinar el tiempo de ejecución
     
@@ -35,17 +38,21 @@ public class Job implements Runnable {
         this.correo = correo;
         this.conexion = new Conexion();
         this.agora = new Agora(conexion);
+        this.cliente = new Cliente();
     
     }
     
     @Override
     public void run() {
         
+        url = "https://postman-echo.com/get?test=";
+        
         inicio = System.currentTimeMillis(); //Tomamos la hora en que inicio el algoritmo y la almacenamos en la variable inicio
         
             indicadorActual++;
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
+            System.out.println(cliente.clienteGet(url));
             //Este IF es solo para probar si envía correo
             /*if ( indicadorActual == 1 ) {
             
