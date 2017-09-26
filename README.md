@@ -37,13 +37,12 @@ entre cada correo.
 
 ### Instalar **Maven**
 
-1. Descargar Maven https://maven.apache.org/download.cgi
-* Windows - apache-maven-3.5.0-bin.zip
-* Linux - apache-maven-3.5.0-bin.tar.gz
+1. Descargar la última versión de Maven en https://maven.apache.org/download.cgi
 2. Descomprimir la carpeta en el directorio que sea fácil identificar (Ejemplo: Documentos o
 archivos de programa).
 3. Poner el directorio **bin** en el path de búsqueda de ejecutables.
 * Panel de control - editar las variables de entorno del sistema
+**NOTA: No debemos borrar o modificar la información ya existente, ya que esto puede generar que otros programas dejen de funcionar.**
 * Variables de entorno - Se selecciona path - Apretamos el botón editar
 * Seleccionamos "Nuevo" - Indicamos la ruta de nuestra carpeta apache-maven-3.5.0
 ejemplo: `C:\Users\pc\Documents\apache-maven-3.5.0\bin`

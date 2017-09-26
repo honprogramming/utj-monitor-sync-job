@@ -75,12 +75,12 @@ public class Main {
             job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
             job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
         
-            if (horasInicioJob[i].length() == 5) {
+            try {
                     
                 hora = Integer.parseInt(horasInicioJob[i].substring(0, 2));
                 minuto = Integer.parseInt(horasInicioJob[i].substring(3, 5));
                     
-            } else {
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
                     
                 hora = 06;
                 minuto = 00;
