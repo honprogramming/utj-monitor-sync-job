@@ -2,6 +2,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,7 +37,7 @@ public class Conexion {
     
     }
     
-    public Connection conexionSQL(){
+    public Connection conexionSQL(Logger log){
         
         try {
         
@@ -45,6 +46,7 @@ public class Conexion {
         } catch (SQLException ex) {
            
             System.out.println("Error:" + ex.getMessage());
+            log.error("Error al conectar a la Base de Datos", ex);
         
         }
         

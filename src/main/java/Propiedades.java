@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,7 +21,7 @@ public class Propiedades {
     
     private Properties propiedades = new Properties();
        
-    public Propiedades(String urlArgumentos) throws FileNotFoundException, IOException {
+    public Propiedades(String urlArgumentos, Logger log) throws FileNotFoundException, IOException {
       
         File externo = new File(urlArgumentos);
 
@@ -30,22 +31,23 @@ public class Propiedades {
                 
                 try(FileInputStream raiz = new FileInputStream(externo)) {
                     
-                propiedades.load(raiz);
+                    propiedades.load(raiz);
                     
-            } 
+                } 
                  
             } else {
                 
                 try (InputStream raiz = getClass().getResourceAsStream("ArchivoConfig.properties")) {
          
-                propiedades.load(raiz);
+                    propiedades.load(raiz);
         
                 }
          
             }
+            
         } catch (IOException ex) {
                 
-            System.out.println("Envíar a log");
+            log.error("Error: ", ex);
         
         }
         

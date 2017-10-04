@@ -2,6 +2,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import javax.ws.rs.core.MediaType;
+import org.apache.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,7 +18,7 @@ public class Cliente {
     
     private String output = null;
     
-    public String clienteGet (String url) {
+    public String clienteGet (String url, Logger log) {
     
         try {
 
@@ -29,7 +30,7 @@ public class Cliente {
 
             if (respuesta.getStatus() != 200) {
 				
-                throw new RuntimeException("Failed : HTTP error code : " + respuesta.getStatus());
+                log.error("Error : HTTP código de estatus : " + respuesta.getStatus());
 			
             }
 
@@ -37,7 +38,7 @@ public class Cliente {
 
 	} catch (Exception e) {
 
-            e.printStackTrace();
+            log.error("Error: ", e);
 
 	}
         
