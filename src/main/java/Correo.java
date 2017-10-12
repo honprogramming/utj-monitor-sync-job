@@ -79,12 +79,11 @@ public class Correo {
             message.setText(mensaje);
  
             Transport.send(message);
-            
-            System.out.println("Su mensaje se ha enviado");
+
+            log.info("Su mensaje se ha enviado");
          
         } catch (MessagingException e) {
         
-            System.out.println(e);
             log.error("Mensaje no enviado", e);
             
             throw new RuntimeException(e);

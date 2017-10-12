@@ -44,8 +44,7 @@ public class Conexion {
             this.conexion = DriverManager.getConnection(url);
             
         } catch (SQLException ex) {
-           
-            System.out.println("Error:" + ex.getMessage());
+
             log.error("Error al conectar a la Base de Datos", ex);
         
         }

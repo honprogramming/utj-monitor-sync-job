@@ -54,8 +54,7 @@ public class Job implements Runnable {
             indicadorActual++;
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
-            System.out.println(cliente.clienteGet(url, log));
-            log.info(indicadorActual + " Indicador consultado en UTJ Monitor");
+            log.info(cliente.clienteGet(url, log) + " Indicador consultado en UTJ Monitor");
             //Este IF es solo para probar si envía correo
             /*if ( indicadorActual == 1 ) {
             
@@ -102,8 +101,6 @@ public class Job implements Runnable {
 
             if ( indicadorFinal > indicadorActual ) {
                     
-                System.out.println("Si: Insertar datos en UTJ Monitor");
-                System.out.println();
                 log.info(indicadorActual + " Indicador actualizado en UTJ Monitor");
                     
             } else {
@@ -125,8 +122,6 @@ public class Job implements Runnable {
                 
             if ( indicadorActual >= indicadorFinal ) {
                     
-                System.out.println("Ya no hay mas indicadores");
-                System.out.println();
                 log.info(" Recorrido Completo");
                 
                 fin = System.currentTimeMillis(); //Tomamos la hora en que finalizó el algoritmo y la almacenamos en la variable T
