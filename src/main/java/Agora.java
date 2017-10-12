@@ -3,6 +3,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,12 +20,14 @@ public class Agora {
     private String indicador;
     private Date fecha;
     private Conexion conexion;
+    private Logger log;
 
-    public Agora(Conexion conexion) {
+    public Agora(Conexion conexion, Logger log) {
         
         this.indicador = null;
         this.fecha = null;
         this.conexion = conexion;
+        this.log = log;
         
     }
 
@@ -54,7 +57,7 @@ public class Agora {
 
     public Date consultarAgora(int codigo) {
         
-        conexion.conexionSQL();
+        conexion.conexionSQL(log);
         
         PreparedStatement comando = null;
         
@@ -74,7 +77,11 @@ public class Agora {
                 
             }
             
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+        
+            log.error("Error al realizar la consulta", e);
+            
+        }
         
         return fecha;
         

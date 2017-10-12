@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,6 +35,10 @@ public class Main {
         private static Job job03; 
         private static Job job04;
       
+        private static Logger log = Logger.getLogger(Main.class);
+        
+        private static File f;
+        
         private static int numIndicadores;
         
         private static String urlArgumentos;
@@ -46,6 +53,9 @@ public class Main {
         
         private static int hora, minuto;
         
+        private static String archivo;
+        
+        @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         
         if ( args.length != 0 ) {
@@ -58,9 +68,33 @@ public class Main {
             
         }
         
-        propiedades = new Propiedades(urlArgumentos).getProperties();
+        propiedades = new Propiedades(urlArgumentos, log).getProperties();
         
-        correo = new Correo(propiedades);
+        correo = new Correo(propiedades, log);
+        
+        archivo = propiedades.getProperty("log4j.appender.archivo.file");
+        
+        f = new File(archivo);
+        
+        if (f.exists()) {
+            
+            if (f.canWrite()) {
+
+                PropertyConfigurator.configure(propiedades);
+
+            } else {
+
+                System.out.println("Error: Acceso denegado archivo.log, archivo de solo lectura");
+                correo.sendMail("Error: Acceso denegado archivo.log, archivo de solo lectura");
+                System.exit(0);
+
+            }
+            
+        } else {
+            
+            PropertyConfigurator.configure(propiedades);
+            
+        }
         
         String horasInicio = propiedades.getProperty("horasInicioJob");
         
@@ -70,10 +104,10 @@ public class Main {
             //Le puse un número unicamente para probar, mientras sabemos como se obtendra el número de indicadores
             numIndicadores = 8;
         
-            job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo);
-            job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo);
-            job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo);
-            job04 = new Job((numIndicadores/4)*3, numIndicadores, correo);
+            job01 = new Job(numIndicadores-numIndicadores, numIndicadores/4, correo, log);
+            job02 = new Job(numIndicadores/4, (numIndicadores/4)*2, correo, log);
+            job03 = new Job((numIndicadores/4)*2, (numIndicadores/4)*3, correo, log);
+            job04 = new Job((numIndicadores/4)*3, numIndicadores, correo, log);
         
             try {
                     
@@ -84,7 +118,7 @@ public class Main {
                     
                 hora = 06;
                 minuto = 00;
-                System.out.println("Formato de hora equivocado, reportar log");
+                log.warn("Formato de hora equivocado", e);
                     
             }
             

@@ -1,7 +1,6 @@
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,6 +13,8 @@ import java.util.logging.Logger;
  * @author Omar
  */
 public class Job implements Runnable {
+    
+    private Logger log;
     
     private Correo correo;
     
@@ -31,14 +32,15 @@ public class Job implements Runnable {
     int indicadorFinal;
     int indicadorActual;
     
-    public Job (int indicadorInicial, int indicadorFinal, Correo correo) throws IOException {
+    public Job (int indicadorInicial, int indicadorFinal, Correo correo, Logger log) throws IOException {
         
         this.indicadorActual = indicadorInicial;
         this.indicadorFinal = indicadorFinal;
         this.correo = correo;
         this.conexion = new Conexion();
-        this.agora = new Agora(conexion);
         this.cliente = new Cliente();
+        this.log = log;
+        this.agora = new Agora(this.conexion, this.log);
     
     }
     
@@ -52,7 +54,7 @@ public class Job implements Runnable {
             indicadorActual++;
             
             System.out.println("Consultar por código del indicador en UTJ Monitor " + indicadorActual);
-            System.out.println(cliente.clienteGet(url));
+            log.info(cliente.clienteGet(url, log) + " Indicador consultado en UTJ Monitor");
             //Este IF es solo para probar si envía correo
             /*if ( indicadorActual == 1 ) {
             
@@ -68,19 +70,20 @@ public class Job implements Runnable {
                 
             } catch (InterruptedException ex) {
                    
-                Logger.getLogger(Job.class.getName()).log(Level.SEVERE, null, ex);
+                log.warn("Error");
                
             }
 
             System.out.println("Consultar por código del indicador en Agora " + agora.consultarAgora(indicadorActual));
-
+            log.info(indicadorActual + " Indicador consultado en AGORA");
+            
             try {
                     
                 Thread.sleep(500);
                 
             } catch (InterruptedException ex) {
                    
-                Logger.getLogger(Job.class.getName()).log(Level.SEVERE, null, ex);
+                log.warn("Error");
                 
             }
 
@@ -92,14 +95,13 @@ public class Job implements Runnable {
                 
             } catch (InterruptedException ex) {
                    
-                Logger.getLogger(Job.class.getName()).log(Level.SEVERE, null, ex);
+                log.warn("Error");
                 
             }
 
             if ( indicadorFinal > indicadorActual ) {
                     
-                System.out.println("Si: Insertar datos en UTJ Monitor");
-                System.out.println();
+                log.info(indicadorActual + " Indicador actualizado en UTJ Monitor");
                     
             } else {
                 
@@ -114,14 +116,13 @@ public class Job implements Runnable {
                 
             } catch (InterruptedException ex) {
                    
-                Logger.getLogger(Job.class.getName()).log(Level.SEVERE, null, ex);
+                log.warn("Error");
                 
             }
                 
             if ( indicadorActual >= indicadorFinal ) {
                     
-                System.out.println("Ya no hay mas indicadores");
-                System.out.println();
+                log.info(" Recorrido Completo");
                 
                 fin = System.currentTimeMillis(); //Tomamos la hora en que finalizó el algoritmo y la almacenamos en la variable T
                 tiempo = (fin - inicio) * indicadorFinal; //Calculamos los milisegundos de diferencia

@@ -14,6 +14,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,8 +31,9 @@ public class Correo {
     private String host;
     private String puerto;
     private String[] destinatarios;
+    private Logger log;
    
-    public Correo(Properties propiedades) throws IOException {
+    public Correo(Properties propiedades, Logger log) throws IOException {
         
         this.propiedades = propiedades;
         this.usuario = propiedades.getProperty("correoOrigen");
@@ -41,6 +43,7 @@ public class Correo {
         this.host = propiedades.getProperty("host");
         this.puerto = propiedades.getProperty("puerto");
         this.destinatarios = para.split(";");
+        this.log = log;
     
     }
     
@@ -76,12 +79,12 @@ public class Correo {
             message.setText(mensaje);
  
             Transport.send(message);
-            
-            System.out.println("Su mensaje se a enviado");
+
+            log.info("Su mensaje se ha enviado");
          
         } catch (MessagingException e) {
         
-            System.out.println(e);
+            log.error("Mensaje no enviado", e);
             
             throw new RuntimeException(e);
         
